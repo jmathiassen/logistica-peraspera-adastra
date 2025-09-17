@@ -1,2 +1,2 @@
-# transport-empire
-Public repo for the game Transport Empire
+# logistica-peraspera-adastra
+Public repo for the game Logistica: Per Aspera, Ad Astra

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Logistica.PerAsperaAdAstra.Mods.Default</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Logistica.PerAsperaAdAstra.Core\Logistica.PerAsperaAdAstra.Core.csproj" />
+    </ItemGroup>
+
+</Project>
