@@ -5,7 +5,7 @@ namespace LogisticaPerAsperaAdAstra.Core;
 
 public sealed class SimulationInstance(SimulationManifest simulationManifest)
 {
-    private World EcsWorld { get; } = World.Create();
+    public World EcsWorld { get; } = World.Create();
     private GalacticDateTime CurrentTime = new();
 
     // Spatial grid for quick lookup of entities by their coordinates.
@@ -33,6 +33,91 @@ public sealed class SimulationInstance(SimulationManifest simulationManifest)
     {
         _spatialGrid.Remove((coordinate.X, coordinate.Y));
     }
+
+     // --- TEST NETWORK GENERATOR ---
+
+    /// <summary>
+    /// For testing purposes, this function generates a simplified but representative
+    /// transport network of Norway's major cities and connections.
+    /// </summary>
+    public void GenerateNorwegianTestNetwork()
+    {
+        List<(string Name, double Lat, double Lon)> cityData =
+        [
+            ("Oslo", 59.9139, 10.7522),
+            ("Bergen", 60.3913, 5.3221),
+            ("Trondheim", 63.4305, 10.3951),
+            ("Stavanger", 58.9690, 5.7331),
+            ("Kristiansand", 58.1472, 7.9944),
+            ("Bodø", 67.2800, 14.4050),
+
+            // Key junctions and towns
+            ("Drammen", 59.7439, 10.2045),
+            ("Lillehammer", 61.1153, 10.4663),
+            ("Dombås", 62.0747, 9.1294),
+            ("Hamar", 60.7945, 11.0679),
+            ("Fauske", 67.2588, 15.3926)
+        ];
+
+        List<(string From, string To)> railConnections =
+        [
+            ("Oslo", "Drammen"), ("Drammen", "Kristiansand"), ("Kristiansand", "Stavanger"), // Sørlandsbanen
+            ("Oslo", "Hamar"), ("Hamar", "Lillehammer"), ("Lillehammer", "Dombås"), ("Dombås", "Trondheim"), // Dovrebanen
+            ("Trondheim", "Fauske"), ("Fauske", "Bodø"), // Nordlandsbanen
+            ("Oslo", "Bergen") // Bergensbanen (simplified)
+        ];
+
+        List<(string From, string To)> roadConnections =
+        [
+            ("Oslo", "Drammen"), ("Drammen", "Kristiansand"), ("Kristiansand", "Stavanger"), ("Stavanger", "Bergen"),
+            ("Oslo", "Hamar"), ("Hamar", "Lillehammer"), ("Lillehammer", "Trondheim"),
+            ("Trondheim", "Bodø")
+        ];
+
+        // --- Map Generation Logic ---
+        Dictionary<string, (Entity city, Entity trainStation, Entity busStation)> nodeEntities = new();
+
+        // Simple projection to map Lat/Lon to game coordinates
+        Coordinate MapToCoordinate(double lat, double lon)
+        {
+            // These values scale and center Norway in a reasonable coordinate space
+            const double scaleX = 20.0;
+            const double scaleY = 40.0;
+            const double offsetX = -5.0;
+            const double offsetY = -58.0;
+
+            int x = (int)((lon + offsetX) * scaleX);
+            int y = (int)((lat + offsetY) * scaleY);
+            return new Coordinate(x, y);
+        }
+
+        // 1. Create all city and station nodes
+        foreach ((string name, double lat, double lon) in cityData)
+        {
+            Coordinate coordinate = MapToCoordinate(lat, lon);
+            Entity cityEntity = PlanCity(coordinate, name);
+            Entity trainStationEntity = PlanTrainStation(coordinate, $"{name} Central Station");
+            Entity busStationEntity = PlanBusStation(coordinate, $"{name} Bus Terminal");
+            nodeEntities[name] = (cityEntity, trainStationEntity, busStationEntity);
+        }
+
+        // 2. Create rail connections
+        foreach (var (from, to) in railConnections)
+        {
+            Entity fromStation = nodeEntities[from].trainStation;
+            Entity toStation = nodeEntities[to].trainStation;
+            PlanRailTrackEdge(fromStation, toStation, EdgeDirection.Both, []);
+        }
+
+        // 3. Create road connections
+        foreach ((string from, string to) in roadConnections)
+        {
+            Entity fromStation = nodeEntities[from].busStation;
+            Entity toStation = nodeEntities[to].busStation;
+            PlanRoadEdge(fromStation, toStation, []);
+        }
+    }
+
 
     // --- Lifecycle Management ---
     public void RevertToPlannedState(Entity entity)
@@ -198,6 +283,8 @@ public sealed class SimulationInstance(SimulationManifest simulationManifest)
     public Entity PlanMine(Coordinate position, string name) => PlanIndustry(position, name, new Mine());
     private Entity PlanIndustry(Coordinate position, string name, params object[] components) => PlanNode(position, new IsIndustry(), new Name { Value = name }, components);
     public Entity PlanCity(Coordinate position, string name) => PlanNode(position, new City(), new Name { Value = name });
+    public Entity PlanTrainStation(Coordinate position, string name) => PlanNode(position, new TrainStation(), new Name { Value = name });
+    public Entity PlanBusStation(Coordinate position, string name) => PlanNode(position, new BusStation(), new Name { Value = name });
     private Entity PlanWaypoint(Coordinate position, int index, Entity parentEdge, params object[] components) => PlanNode(position, new Waypoint(), new IndexPosition { Value = index }, new Parent { Value = parentEdge }, components);
     private Entity PlanNode(Coordinate position, params object[] components) => PlanEntity(position, new IsNode(), components);
     private Entity PlanEntity(Coordinate? position, params object[] components)

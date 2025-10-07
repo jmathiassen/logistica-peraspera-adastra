@@ -44,7 +44,8 @@ public struct IsIndustry;
 public struct City : INode;
 public struct Junction : INode;
 public struct Waypoint : INode;
-public struct Station : INode;
+public struct TrainStation : INode;
+public struct BusStation : INode;
 public struct Platform : INode;
 
 public struct Refinery : INode, IIndustry;
