@@ -102,7 +102,7 @@ public sealed class SimulationInstance(SimulationManifest simulationManifest)
         }
 
         // 2. Create rail connections
-        foreach (var (from, to) in railConnections)
+        foreach ((string from, string to) in railConnections)
         {
             Entity fromStation = nodeEntities[from].trainStation;
             Entity toStation = nodeEntities[to].trainStation;

@@ -2,7 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistica.PerAsperaAdAstra.Core", "Logistica.PerAsperaAdAstra.Core\Logistica.PerAsperaAdAstra.Core.csproj", "{A17F657F-5507-44E5-AD07-26098D543379}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistica-PerAsperaAdAstra", "Logistica-PerAsperaAdAstra\Logistica-PerAsperaAdAstra.csproj", "{A77BB2F3-1E38-4450-BBB3-75763C75E3A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistica-PerAsperaAdAstra.Client", "Logistica-PerAsperaAdAstra.Client\Logistica-PerAsperaAdAstra.Client.csproj", "{A77BB2F3-1E38-4450-BBB3-75763C75E3A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistica.PerAsperaAdAstra.Server", "Logistica.PerAsperaAdAstra.Server\Logistica.PerAsperaAdAstra.Server.csproj", "{8F19E56D-2C8C-4F24-885B-6445218C834A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{A77BB2F3-1E38-4450-BBB3-75763C75E3A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A77BB2F3-1E38-4450-BBB3-75763C75E3A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A77BB2F3-1E38-4450-BBB3-75763C75E3A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F19E56D-2C8C-4F24-885B-6445218C834A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F19E56D-2C8C-4F24-885B-6445218C834A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F19E56D-2C8C-4F24-885B-6445218C834A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F19E56D-2C8C-4F24-885B-6445218C834A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
